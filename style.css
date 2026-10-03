@@ -1,0 +1,50 @@
+body{
+    background-color: slateblue;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 10px auto;
+    padding: 20px;
+
+    
+
+}
+
+form{
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+h1{
+ color:black ;
+ font-weight: bold;
+ font-size: 50px;
+ 
+ 
+}
+
+input{
+    display: block;
+    margin-bottom:10px ;
+    
+}
+
+button{
+    background-color: yellow;
+    cursor: pointer;
+   
+}
+
+button:hover{
+    background-color: yellowgreen;
+}
+
+li{ 
+    color:yellow;
+    font-weight: bold;
+
+}
+
+.date-heading {
+font-weight: bold;
+color:white;
+margin: top 16px;
+}
