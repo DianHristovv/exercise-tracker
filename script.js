@@ -1,6 +1,5 @@
 const workoutList=document.getElementById("workout-list")
 const exerciseInput=document.getElementById("exercise")
-const setsInput=document.getElementById("sets")
 const repsInput=document.getElementById("reps")
 const weightInput=document.getElementById("weight")
 const workouts = JSON.parse(localStorage.getItem("workouts")) || [];
@@ -11,10 +10,37 @@ const totalWorkoutsList=document.getElementById("total-workouts")
 const totalWeightLifted=document.getElementById("total-weight")
 const workoutDate=document.getElementById("workout-date")
 const exerciseAppearenceCount=document.getElementById("exercise-appearence-count")
+let sets = [];
+const addSetButton = document.getElementById("add-set");
+const currentSetsList = document.getElementById("current-sets");
+
+
+
+
+addSetButton.addEventListener("click",function(){
+if(repsInput.value.trim()===""||weightInput.value.trim()===""||date.value.trim()===""){
+      return;
+    }
+  const set={
+  reps:Number(repsInput.value),
+  weight:Number(weightInput.value)
+}
+sets.push(set)
+ 
+const item=document.createElement("li")
+item.textContent="Set"+sets.length+" : "+set.reps+" x "+set.weight+"kg"
+currentSetsList.appendChild(item)
+repsInput.value = "";
+weightInput.value = "";
+
+  
+
+})
 
 function showWorkoutDate(){
   workoutList.innerHTML=""
-
+ 
+ 
 
 
   const dates=[]
@@ -60,9 +86,9 @@ function showTotalWeight(workout){
   
   let weightVolume=0;
   for(const workout of workouts){
-    
-  weightVolume+=workout.weight*workout.reps*workout.sets
- }
+    for(const set of workout.sets){
+  weightVolume+=set.reps*set.weight
+    }}
   const item=document.createElement("li")
   item.textContent="Total volume:"+" "+weightVolume
   totalWeightLifted.appendChild(item)
@@ -80,11 +106,12 @@ totalWorkoutsList.appendChild(item)
 function getRecord(name){
   let best=0
   for(const workout of workouts){
-    if(workout.exercise.toLowerCase()===name.toLowerCase()   && workout.weight>best){
-      best=workout.weight
+    for(const set of workout.sets){
+    if(workout.exercise.toLowerCase()===name.toLowerCase()   && set.weight>best){
+      best=set.weight
     
     }
-  }
+    }}
   return best
 }
 
@@ -111,7 +138,11 @@ function getToday(){
 date.value=getToday()
 function showWorkout(workout){
     const item=document.createElement("li")
-    item.textContent = workout.exercise + " - " + workout.sets + " x " + workout.reps + " - " + workout.weight + " kg - Date: " + (workout.date || "no date");
+    let setsText=""
+for(const set of workout.sets){
+    setsText += set.reps + " x " + set.weight + " kg, ";
+}
+    item.textContent = workout.exercise + " - " +setsText+"- Date: " + (workout.date || "no date");
    workoutList.appendChild(item)
     const deleteButton=document.createElement("button")
     deleteButton.textContent="Delete"
@@ -131,6 +162,7 @@ function showWorkout(workout){
 
 }
 
+
     showWorkoutDate()
     
 
@@ -140,14 +172,12 @@ showTotalWeight()
 showExerciseAppearence("Bench Press")
 form.addEventListener("submit",function(event){
     event.preventDefault();
-    if(exerciseInput.value.trim()===""||repsInput.value.trim()===""||setsInput.value.trim()===""||weightInput.value.trim()===""||date.value.trim()===""){
+    if(exerciseInput.value.trim()===""||date.value.trim()===""||sets.length===0){
       return;
     }
     const workout={
     exercise:exerciseInput.value,
-    sets:Number(setsInput.value),
-    reps:Number(repsInput.value),
-    weight:Number(weightInput.value),
+    sets: sets,
     date:date.value
     }
     workouts.push(workout)
@@ -159,8 +189,9 @@ form.addEventListener("submit",function(event){
   showExerciseAppearence("Bench Press")
    exerciseInput.value="" 
    repsInput.value=""
-   setsInput.value=""
    weightInput.value=""
+   sets=[]
+   currentSetsList.innerHTML=""
    date.value=getToday()
 })
 

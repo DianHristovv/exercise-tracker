@@ -9,19 +9,24 @@
 
   <form id="workout-form">
     <input id="exercise" placeholder="Exercise">
-    <input id="sets" type="number" placeholder="Sets">
+    <input id="date" type="date">
+
     <input id="reps" type="number" placeholder="Reps">
     <input id="weight" type="number" placeholder="Weight (kg)">
-    <input id="date" type="date">
-    <button type="submit">Save</button>
+    <button type="button" id="add-set">Add set</button>
+
+    <ul id="current-sets"></ul>
+
+    <button type="submit">Save workout</button>
   </form>
-<h2>Personal records</h2>
-<ul id="records-list"></ul> 
+
+  <h2>Personal records</h2>
+  <ul id="records-list"></ul>
+
   <ul id="workout-list"></ul>
   <ul id="total-workouts"></ul>
   <ul id="total-weight"></ul>
   <ul id="exercise-appearence-count"></ul>
-  <ul id="workout-date"></ul>
 
   <script src="script.js"></script>
 </body>
