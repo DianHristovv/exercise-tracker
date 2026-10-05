@@ -10,26 +10,81 @@ const totalWorkoutsList=document.getElementById("total-workouts")
 const totalWeightLifted=document.getElementById("total-weight")
 const workoutDate=document.getElementById("workout-date")
 const exerciseAppearenceCount=document.getElementById("exercise-appearence-count")
-let sets = [];
+let session = [];
 const addSetButton = document.getElementById("add-set");
 const currentSetsList = document.getElementById("current-sets");
+const lastWorkoutList=document.getElementById("last-time")
+
+function showSessions(){
+currentSetsList.innerHTML=""
+let exerciseNumber=0
+  for (const group of session){
+    exerciseNumber++
+    const exerciseItem=document.createElement("li")
+     exerciseItem.textContent = "Exercise " + exerciseNumber + ": " + group.exercise;
+    currentSetsList.appendChild(exerciseItem)
+    let setNumber=0
+    for(const set of group.sets){
+      setNumber++
+      const setItem=document.createElement("li")
+      setItem.textContent="Set " + setNumber + ": " + set.reps + " x " + set.weight + " kg"
+      currentSetsList.appendChild(setItem)
+    }
+  }
+}
+
+
+function getSetsText(workout){
+   let setsText=""
+for(const set of workout.sets){
+    setsText += set.reps + " x " + set.weight + " kg, ";
+}
+return setsText
+}
+
+
+exerciseInput.addEventListener("input",function(){
+const lowerName=exerciseInput.value.toLowerCase()
+let lastWorkout=null
+for(const workout of workouts){
+  if(workout.exercise.toLowerCase()===lowerName){
+   lastWorkout=workout
+  }}
+if (lastWorkout === null) {
+  lastWorkoutList.textContent = "";
+  return;
+}
+lastWorkoutList.textContent="Last Time:"+getSetsText(lastWorkout)
+
+})
 
 
 
 
 addSetButton.addEventListener("click",function(){
-if(repsInput.value.trim()===""||weightInput.value.trim()===""||date.value.trim()===""){
+if(repsInput.value.trim()===""||weightInput.value.trim()===""||exerciseInput.value.trim()==="" ){
       return;
     }
   const set={
   reps:Number(repsInput.value),
   weight:Number(weightInput.value)
 }
-sets.push(set)
+const lastGroup=session[session.length-1]
+if(lastGroup===undefined||lastGroup.exercise.toLowerCase()!==exerciseInput.value.toLowerCase()){
+  const newGroup={
+    exercise:exerciseInput.value,
+    sets:[set],
+    
+
+  }
+session.push(newGroup)}
+
+  else{
+    lastGroup.sets.push(set)
+  }
+ showSessions()
  
-const item=document.createElement("li")
-item.textContent="Set"+sets.length+" : "+set.reps+" x "+set.weight+"kg"
-currentSetsList.appendChild(item)
+
 repsInput.value = "";
 weightInput.value = "";
 
@@ -138,10 +193,8 @@ function getToday(){
 date.value=getToday()
 function showWorkout(workout){
     const item=document.createElement("li")
-    let setsText=""
-for(const set of workout.sets){
-    setsText += set.reps + " x " + set.weight + " kg, ";
-}
+    let setsText=getSetsText(workout)
+
     item.textContent = workout.exercise + " - " +setsText+"- Date: " + (workout.date || "no date");
    workoutList.appendChild(item)
     const deleteButton=document.createElement("button")
@@ -172,26 +225,28 @@ showTotalWeight()
 showExerciseAppearence("Bench Press")
 form.addEventListener("submit",function(event){
     event.preventDefault();
-    if(exerciseInput.value.trim()===""||date.value.trim()===""||sets.length===0){
-      return;
+   if (session.length===0){
+      return
     }
+    for(const group of session){
     const workout={
-    exercise:exerciseInput.value,
-    sets: sets,
+    exercise:group.exercise,
+    sets: group.sets,
     date:date.value
     }
     workouts.push(workout)
+   
+  }
   localStorage.setItem("workouts",JSON.stringify(workouts))
   showWorkoutDate()
   showRecords()
   totalWorkouts()
   showTotalWeight()
   showExerciseAppearence("Bench Press")
-   exerciseInput.value="" 
-   repsInput.value=""
-   weightInput.value=""
-   sets=[]
-   currentSetsList.innerHTML=""
+
+  session=[]
+   showSessions()
+  exerciseInput.value=""
    date.value=getToday()
 })
 
