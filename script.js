@@ -25,12 +25,14 @@ function showSession() {
   for (const group of session) {
     exerciseNumber++
     const exerciseItem = document.createElement("li")
+    exerciseItem.classList.add("session-exercise")
     exerciseItem.textContent = "Exercise " + exerciseNumber + ": " + group.exercise;
     currentSetsList.appendChild(exerciseItem)
     let setNumber = 0
     for (const set of group.sets) {
       setNumber++
       const setItem = document.createElement("li")
+      setItem.classList.add("session-set")
       setItem.textContent = "Set " + setNumber + ": " + set.reps + " x " + set.weight + " kg"
       currentSetsList.appendChild(setItem)
     }
@@ -175,7 +177,7 @@ function showRecords() {
   }
   for (const name of names) {
     const item = document.createElement("li")
-    item.textContent = capitalize(name) + " " + getRecord(name) + "kg"
+    item.textContent = capitalize(name) + ": " + getRecord(name) + " kg";
     recordsList.appendChild(item)
   }
 }
