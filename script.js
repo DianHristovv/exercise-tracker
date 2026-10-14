@@ -12,6 +12,30 @@ let session = [];
 const addSetButton = document.getElementById("add-set");
 const currentSetsList = document.getElementById("current-sets");
 const lastTimeText = document.getElementById("last-time")
+const restTimeText=document.getElementById("rest-timer")
+let restTimeId=null
+
+function formatTime(setTime){
+  const minutes=Math.floor(setTime/60)
+  const seconds=setTime%60
+  return minutes + ":" + String(seconds).padStart(2, "0");
+}
+
+function startRestTimer(){
+  clearInterval(restTimeId)
+  let secondsLeft=120
+  restTimeText.textContent="Rest: " + formatTime(secondsLeft)
+restTimeId=setInterval(function(){
+  secondsLeft--
+  restTimeText.textContent = "Rest: " + formatTime(secondsLeft)
+  if(secondsLeft<=0){
+    clearInterval(restTimeId)
+    restTimeText.textContent="Rest over! Next set 💪"
+  }
+},1000)
+
+}
+
 function refreshPage() {
   showWorkoutDate();
   showRecords();
@@ -90,6 +114,8 @@ addSetButton.addEventListener("click", function () {
 
   repsInput.value = "";
   weightInput.value = "";
+
+  startRestTimer()
 
 
 
