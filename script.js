@@ -251,6 +251,9 @@ form.addEventListener("submit", function (event) {
   }
   localStorage.setItem("workouts", JSON.stringify(workouts))
   refreshPage()
+  clearInterval(restTimeId)
+  restTimeText.innerHTML=""
+
 
   session = []
   showSession()
